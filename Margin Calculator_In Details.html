@@ -1,0 +1,54 @@
+<div style="max-width:320px;padding:20px;border:1px solid #ccc;border-radius:10px;"> 
+  <h3>Margin Calculator</h3>
+  
+  <label>Cost Price (Without GST):</label><br>
+  <input type="number" id="costPrice" placeholder="Enter Cost Price (Without GST)" /><br><br>
+
+  <label>MRP (incl. GST):</label><br>
+  <input type="number" id="sellingPrice" placeholder="Enter MRP" /><br><br>
+
+  <label>GST %:</label><br>
+  <input type="number" id="gst" placeholder="Enter GST %" /><br><br>
+
+  <button onclick="calculateMargin()">Calculate Margin</button>
+
+  <p id="result" style="margin-top:10px;font-weight:bold;"></p>
+  <div id="reference" style="margin-top:10px;font-size:12px;line-height:1.5;"></div>
+</div>
+
+<script type="text/javascript">
+function calculateMargin() {
+  var cost = parseFloat(document.getElementById("costPrice").value);
+  var selling = parseFloat(document.getElementById("sellingPrice").value);
+  var gst = parseFloat(document.getElementById("gst").value);
+  var result = document.getElementById("result");
+  var reference = document.getElementById("reference");
+  
+  if (isNaN(cost) || isNaN(selling) || isNaN(gst) || cost <= 0 || selling <= 0 || gst < 0) {
+    result.innerHTML = "Please enter valid positive numbers!";
+    reference.innerHTML = "";
+    return;
+  }
+
+  var abatedMRP = selling / (1 + gst / 100);
+  var marginValue = abatedMRP - cost;
+  var marginPercent = (marginValue / abatedMRP) * 100;
+  
+  result.innerHTML = 
+    "Abated MRP (MRP excl. GST): ₹" + abatedMRP.toFixed(2) + "<br>" +
+    "Margin Value: ₹" + marginValue.toFixed(2) + "<br>" +
+    "Margin %: " + marginPercent.toFixed(2) + "%";
+  
+  reference.innerHTML = `
+    <strong>Calculation Reference:</strong><br>
+    Abated MRP = MRP ÷ (1 + GST ÷ 100)<br>
+    = ₹${selling} ÷ (1 + ${gst}/100) = ₹${abatedMRP.toFixed(2)}<br><br>
+    
+    Margin Value = Abated MRP - Cost Price (Without GST)<br>
+    = ₹${abatedMRP.toFixed(2)} - ₹${cost} = ₹${marginValue.toFixed(2)}<br><br>
+    
+    Margin % = (Margin Value ÷ Abated MRP) × 100<br>
+    = (₹${marginValue.toFixed(2)} ÷ ₹${abatedMRP.toFixed(2)}) × 100 = ${marginPercent.toFixed(2)}%
+  `;
+}
+</script>
